@@ -10,11 +10,35 @@
 </head>
 <body>
   <div id="app">
+    <!-- MODAL -->
+    <section class="modal" v-if="produto">
+      <div class="modal_container">
+        <div class="modal_img"><img :src="produto.img" alt=""></div>
+        <div class="modal_dados">
+          <button class="modal_fechar" @click="produto = false">X</button>
+          <span class="modal_preco">{{produto.preco}}</span>
+          <h2 class="modal_titulo">{{produto.nome}}</h2>
+          <p>{{produto.descricao}}</p>
+          <button class="modal_btn">Adcionar Item</button>
+        </div>
+        <div class="avaliacoes">
+          <h2 class="avaliacoes_subtitulo">Avaliações</h2>
+          <ul>
+            <li class="avaliacao" v-for="avaliacao in produto.reviews">
+              <p class="avaliacao_descricao">{{avaliacao.descricao}}</p>
+              <p class="avaliacao_usuario">{{avaliacao.nome}} | {{avaliacao.estrelas}} estrelas</p>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!--PRODUTOS-->
     <section class="produtos">
-      <div v-for="produto in produtos" :key="produto.id" class="produto">
+      <div v-for="produto in produtos" @click="retrieveProduct(produto.id)" :key="produto.id" class="produto">
         <img :src="produto.img" :alt="produto.nome" class="produto_img">
         <div class="produto_info">
-          <span class="produto_preco">R$ {{parseFloat(produto.preco).toFixed(2)}}</span>
+          <span class="produto_preco">{{produto.preco | formatCurrency}}</span>
           <h2 class="produto_titulo">{{produto.nome}}</h2>
         </div>
       </div>
