@@ -23,6 +23,9 @@ const app = new Vue({
 				.then((response) => response.json())
 				.then((data) => (this.produto = data));
 		},
+		fecharModal({ target, currentTarget }) {
+			if (target == currentTarget) this.produto = false;
+		},
 	},
 	computed: {
 		formatCurrency(value) {

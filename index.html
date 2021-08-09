@@ -10,8 +10,26 @@
 </head>
 <body>
   <div id="app">
+    
+    <!--HEADER-->
+    <header class="header">
+      <img src="./assets/techno.svg" alt="">
+
+    </header>
+
+    <!--PRODUTOS-->
+    <section class="produtos">
+      <div v-for="produto in produtos" @click="retrieveProduct(produto.id)" :key="produto.id" class="produto">
+        <img :src="produto.img" :alt="produto.nome" class="produto_img">
+        <div class="produto_info">
+          <span class="produto_preco">{{produto.preco | formatCurrency}}</span>
+          <h2 class="produto_titulo">{{produto.nome}}</h2>
+        </div>
+      </div>
+    </section>
+
     <!-- MODAL -->
-    <section class="modal" v-if="produto">
+    <section class="modal" v-if="produto" @click="fecharModal">
       <div class="modal_container">
         <div class="modal_img"><img :src="produto.img" alt=""></div>
         <div class="modal_dados">
@@ -29,17 +47,6 @@
               <p class="avaliacao_usuario">{{avaliacao.nome}} | {{avaliacao.estrelas}} estrelas</p>
             </li>
           </ul>
-        </div>
-      </div>
-    </section>
-
-    <!--PRODUTOS-->
-    <section class="produtos">
-      <div v-for="produto in produtos" @click="retrieveProduct(produto.id)" :key="produto.id" class="produto">
-        <img :src="produto.img" :alt="produto.nome" class="produto_img">
-        <div class="produto_info">
-          <span class="produto_preco">{{produto.preco | formatCurrency}}</span>
-          <h2 class="produto_titulo">{{produto.nome}}</h2>
         </div>
       </div>
     </section>
