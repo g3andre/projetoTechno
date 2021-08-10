@@ -27,13 +27,25 @@ const app = new Vue({
 		retrieveProduct(productId) {
 			fetch(`./api/produtos/${productId}/dados.json`)
 				.then((response) => response.json())
-				.then((data) => (this.produto = data));
+				.then((data) => {
+					this.produto = data;
+					this.atualizaEstoque();
+				});
 		},
 		fecharModal({ target, currentTarget }) {
 			if (target == currentTarget) this.produto = false;
 		},
+		atualizaEstoque(qtd) {
+			if (qtd) {
+				this.produto.estoque -= qtd;
+			} else {
+				const index = this.carrinhoEditado.findIndex((item) => item.id === this.produto.id);
+				console.log(index);
+				if (index >= 0) this.produto.estoque -= this.carrinhoEditado[index].qtd;
+			}
+		},
 		adicionarItem() {
-			this.produto.estoque--;
+			this.atualizaEstoque(1);
 			let { id, nome, preco } = this.produto;
 			this.carrinho.push({ id, nome, preco });
 			this.alerta(`${nome} adicionado ao carrinho.`);
@@ -60,9 +72,6 @@ const app = new Vue({
 		},
 	},
 	computed: {
-		formatCurrency(value) {
-			return `R$ ${parseFloat(value).toFixed(2)}`;
-		},
 		carrinhoTotal() {
 			return this.carrinho.reduce((acc, current) => {
 				return acc + current.preco;
@@ -71,12 +80,12 @@ const app = new Vue({
 		carrinhoEditado() {
 			const teste = this.carrinho.reduce((acc, item) => {
 				const indexElement = acc.find((element, index) => {
-					if (element.id == item.id) {						
+					if (element.id == item.id) {
 						acc[index].qtd++;
 						return true;
 					}
 				});
-				
+
 				if (!indexElement) {
 					acc.push({ ...item, qtd: 1 });
 				}
@@ -88,7 +97,6 @@ const app = new Vue({
 	watch: {
 		carrinho() {
 			window.localStorage.carrinho = JSON.stringify(this.carrinho);
-			console.log(this.carrinhoEditado);
 		},
 		produto() {
 			document.title = this.produto.nome || 'Techno';
